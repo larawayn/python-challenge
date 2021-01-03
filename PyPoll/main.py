@@ -18,14 +18,20 @@ with open(csvpath) as csvfile:
     print("Election Results")
     print("-------------------")
     #assign variables
-    total_votes = 0
-    candidate_list = []
+    
+    candidate_info = {}
 
     # Read each row of data after the header
     for row in csvreader: 
-    #find total_votes
-        total_votes = total_votes + 1
+        candidate = str(row[0])
+    #create dictionary
+        if row in candidate:
+            candidate_info(str(row[0])) += 1
+        else:
+            csvreader[row] = 1 
         
+    for key, value in candidate.items(): 
+        print ("% d : % d"%(key, value))
 
 
     
