@@ -9,31 +9,65 @@ csvpath = os.path.join('Resources', 'election_data.csv')
 
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-    print(csvreader)
+    #print(csvreader)
 
 # Read the header row first (skip this step if there is now header)
     csv_header = next(csvreader)
-    print(f"CSV Header: {csv_header}")
+    #print(f"CSV Header: {csv_header}")
 
     print("Election Results")
     print("-------------------")
     #assign variables
-    
-    candidate_info = {}
-
+    total_votes = 0
+    vote_count = {'Khan' : 0, 'Correy' : 0, 'Li': 0, "O'Tooley": 0}
+    voter_percentage = {'Khan' : 0, 'Correy' : 0, 'Li': 0, "O'Tooley": 0}
     # Read each row of data after the header
     for row in csvreader: 
-        candidate = str(row[0])
+        name = row[2]
+        total_votes = total_votes + 1
     #create dictionary
-        if row in candidate:
-            candidate_info(str(row[0])) += 1
+        if name not in vote_count:
+            vote_count[name] = 0
         else:
-            csvreader[row] = 1 
-        
-    for key, value in candidate.items(): 
-        print ("% d : % d"%(key, value))
-
-
+            vote_count[name] += 1 
+            voter_percentage[name] = '{percent:.3%}'.format(percent = int(f'{vote_count[name]}') / total_votes)
+    winner = max(vote_count, key=vote_count.get)
+    
+    #Possible output of combined dictionary -- NOT WORKING
+    #combined_dictionary = {k: [vote_count[k], voter_percentage.get(k)] for k in vote_count}
+    #combined_dictionary.update({k: [None, voter_percentage[k]] for k in voter_percentage if k not in vote_count})
+    #print("Khan:  ", f'{combined_dictionary["Khan"]}')
+    #print("O'Tooley:  ", f'{combined_dictionary["O'Tooley"]}')
     
     print("Total Votes:   ", total_votes)
     print("-------------------")
+    
+    print("Khan:  ", f'{voter_percentage["Khan"]}', "("+f'{vote_count["Khan"]}'+")")
+    print("Correy:  ", f'{voter_percentage["Correy"]}', "("+f'{vote_count["Correy"]}'+")")
+    print("Li:  ", f'{voter_percentage["Li"]}', "("+f'{vote_count["Li"]}'+")")
+    #print("O'Tooley:  ", f'{voter_percentage["O'Tooley"]}', "("+f'{vote_count["O'Tooley"]}'+")")
+   
+    print("-------------------")
+    print("Winner:  ", winner)
+    print("-------------------")
+
+        # Specify the file to write to
+output_path = os.path.join("Analysis", "Python-Challenge.txt")
+
+# Open the file using "write" mode. Specify the variable to hold the contents
+with open(output_path, 'w', newline='') as datafile:   
+     # Initialize writer
+     writer = csv.writer(datafile, delimiter=' ')
+     # write rows
+     writer.writerow(["Election Results"])
+     writer.writerow(["-------------------"])
+     writer.writerow(["Total Votes:   ", total_votes])
+     writer.writerow(["-------------------"])
+     writer.writerow(["Khan:  ", f'{voter_percentage["Khan"]}', "("+f'{vote_count["Khan"]}'+")"])
+     writer.writerow(["Correy:  ", f'{voter_percentage["Correy"]}', "("+f'{vote_count["Correy"]}'+")"])
+     writer.writerow(["Li:  ", f'{voter_percentage["Li"]}', "("+f'{vote_count["Li"]}'+")"])
+     #writer.writerow(["O'Tooley:  ", f'{voter_percentage["O'Tooley"]}', "("+f'{vote_count["O'Tooley"]}'+")"])
+     writer.writerow(["-------------------"])
+     writer.writerow(["Winner:  ", winner])
+     writer.writerow(["-------------------"])
+
