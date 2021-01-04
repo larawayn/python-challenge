@@ -1,80 +1,65 @@
-# First we'll import the os module
-# This will allow us to create file paths across operating systems
+# import modules
 import os 
-
-# Module for reading CSV files
 import csv
-
-
 import sys
 
+#Create path for CSV
 csvpath = os.path.join('Resources', 'election_data.csv')
 
+#Open CSV
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-    #print(csvreader)
-
-# Read the header row first (skip this step if there is now header)
+   
+    # Read the header row first 
     csv_header = next(csvreader)
-    #print(f"CSV Header: {csv_header}")
-
-    print("Election Results")
-    print("-------------------")
+    
+    
     #assign variables
     total_votes = 0
     vote_count = {'Khan' : 0, 'Correy' : 0, 'Li': 0, "O'Tooley": 0}
     
     # Read each row of data after the header
     for row in csvreader: 
+        #Assign candidate name from CSV column
         name = row[2]
+        #Calculate total votes
         total_votes = total_votes + 1
-    #create dictionary
+        #Add votes to dictionary for corresponding name
         if name not in vote_count:
             vote_count[name] = 0
         else:
             vote_count[name] += 1 
-            
+    #Find winner
     winner = max(vote_count, key=vote_count.get)
     
-    #Possible output of combined dictionary -- NOT WORKING
-    #combined_dictionary = {k: [vote_count[k], voter_percentage.get(k)] for k in vote_count}
-    #combined_dictionary.update({k: [None, voter_percentage[k]] for k in voter_percentage if k not in vote_count})
-    #print("Khan:  ", f'{combined_dictionary["Khan"]}')
-    #print("O'Tooley:  ", f'{combined_dictionary["O'Tooley"]}')
-    
+    #print output
+    print("Election Results")
+    print("-------------------")
     print("Total Votes:   ", total_votes)
     print("-------------------")
     for key, votes in vote_count.items():
-            voter_percentage = round((votes/ total_votes)* 100, 3)
-            print(f'{key}: {voter_percentage}%  ({votes})')
-    #print("Khan:  ", f'{voter_percentage["Khan"]}', "("+f'{vote_count["Khan"]}'+")")
-    #print("Correy:  ", f'{voter_percentage["Correy"]}', "("+f'{vote_count["Correy"]}'+")")
-    #print("Li:  ", f'{voter_percentage["Li"]}', "("+f'{vote_count["Li"]}'+")")
-   # print(f'"O'Tooley:  " , {voter_percentage["O'Tooley"]}', "("+f'{vote_count["O'Tooley"]}'+")")
-   
+        voter_percentage = format((votes/ total_votes * 100), '.3f')
+        print(f'{key}: {voter_percentage}%  ({votes})')
     print("-------------------")
     print("Winner:  ", winner)
     print("-------------------")
 
-        # Specify the file to write to
+# Specify the text file to print to
 output_path = os.path.join("Analysis", "Python-Challenge.txt")
 
-# Open the file using "write" mode. Specify the variable to hold the contents
+# Open the txt file
 with open(output_path, 'w', newline='') as datafile:   
-     # Initialize writer
-     print("\n-------", file=datafile)
-     # write rows
-     #writer.writerow(["Election Results"])
-     #writer.writerow(["Total Votes:   ", total_votes])
-     #writer.writerow(["-------------------"])
-     #writer.writerow([""])
-     for key, votes in vote_count.items():
-            voter_percentage = round((votes/ total_votes)* 100, 3)
-            print(f'{key}: {voter_percentage}%  ({votes})', file=datafile)
-
-
-     #writer.writerow(["O'Tooley:  ", f'{voter_percentage["O'Tooley"]}', "("+f'{vote_count["O'Tooley"]}'+")"])
-     #writer.writerow(["-------------------"])
-     #writer.writerow(["Winner:  ", winner])
-     #writer.writerow(["-------------------"])
+    # print rows to txt file
+    print("Election Results", file=datafile)
+    print("-------------------", file=datafile)
+    print("Total Votes:   ", total_votes, file=datafile)
+    print("-------------------", file=datafile)
+    for key, votes in vote_count.items():
+        voter_percentage = format((votes/ total_votes * 100), '.3f')
+        print(f'{key}: {voter_percentage}%  ({votes})', file=datafile)
+    print("-------------------", file=datafile)
+    print("Winner:  ", winner, file=datafile)
+    print("-------------------", file=datafile)
+# Close file
+datafile.close()
 
